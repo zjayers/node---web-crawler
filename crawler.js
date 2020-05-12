@@ -2,10 +2,10 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const colors = require("colors");
 
-const visitedLinks = {};
+const visitedLinks = [];
 
 const searchForLinks = (url) => {
-  if (visitedLinks[url] !== false) {
+  if (visitedLinks.indexOf(url) === -1) {
     axios
       .get(url)
       .then((response) => {
@@ -27,8 +27,9 @@ const searchForLinks = (url) => {
 };
 
 const logVisitedLink = (url) => {
-  visitedLinks[url] = true;
+  visitedLinks.push(url);
   console.log(`Visited: ${url}`.yellow);
 };
 
 searchForLinks("https://www.galvanize.com");
+
