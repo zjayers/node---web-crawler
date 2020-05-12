@@ -1,36 +1,34 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+const axios = require("axios");
+const cheerio = require("cheerio");
+const colors = require("colors");
 
 const visitedLinks = {};
 
 const searchForLinks = (url) => {
-
-  if (!visitedLinks[url]) {
-
-    axios.get(url)
+  if (visitedLinks[url] !== false) {
+    axios
+      .get(url)
       .then((response) => {
-          if(response.status === 200) {
-              logVisitedLink(url);
-              const html = response.data;
-              const $ = cheerio.load(html);
-              const links = $('a'); //jquery get all hyperlinks
-                $(links).each(function(i, link){
-                const href = $(link).attr('href');
-                searchForLinks(href);
-                });
-          }
+        if (response.status === 200) {
+          logVisitedLink(url);
+          const html = response.data;
+          const $ = cheerio.load(html);
+          const links = $("a"); //jquery get all hyperlinks
+          $(links).each(function (i, link) {
+            const href = $(link).attr("href");
+            searchForLinks(href);
+          });
+        }
       })
-    .catch((err) => {
-      //ignore
-    });
-
+      .catch((err) => {
+        //ignore
+      });
   }
-
-}
+};
 
 const logVisitedLink = (url) => {
   visitedLinks[url] = true;
-  console.log(`Visited: ${url}`);
-}
+  console.log(`Visited: ${url}`.yellow);
+};
 
-searchForLinks('https://www.google.com');
+searchForLinks("https://www.galvanize.com");
